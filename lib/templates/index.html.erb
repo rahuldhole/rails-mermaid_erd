@@ -554,7 +554,16 @@
         }
 
         const onDownloadSvg = () => {
-          const svgBlob = new Blob([graph.value], { type: 'image/svg+xml;charset=utf-8' });
+          // Clone the SVG element to remove additional classes and attributes
+          const originalSvg = graph.value;
+          const clone = originalSvg.cloneNode(true);
+
+          // Optional: Remove any auto-generated classes or attributes (e.g., attributeBoxOdd, attributeBoxEven)
+          clone.querySelectorAll("[class*='attributeBox']").forEach((el) => {
+            el.removeAttribute("class");
+          });
+
+          const svgBlob = new Blob([clone.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
           const svgUrl = URL.createObjectURL(svgBlob);
 
           const a = document.createElement("a");
